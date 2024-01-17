@@ -4,10 +4,18 @@ use std::net::SocketAddr;
 use axum::routing::get;
 use axum::Json;
 use axum::Router;
-use serde_json::{json, Value};
+use serde::Serialize;
 
-async fn test() -> Json<Value> {
-    Json(json!({ "message": "Hello, World!" }))
+#[derive(Serialize)]
+struct CustomMessage {
+    message: String,
+}
+
+async fn test() -> Json<CustomMessage> {
+    let msg = CustomMessage {
+        message: "Hello, World!".to_string(),
+    };
+    Json(msg)
 }
 
 #[tokio::main]
