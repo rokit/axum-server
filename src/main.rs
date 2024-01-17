@@ -2,10 +2,12 @@ use std::error::Error;
 use std::net::SocketAddr;
 
 use axum::routing::get;
+use axum::Json;
 use axum::Router;
+use serde_json::{json, Value};
 
-async fn test() -> &'static str {
-    "Hello, World!"
+async fn test() -> Json<Value> {
+    Json(json!({ "message": "Hello, World!" }))
 }
 
 #[tokio::main]
