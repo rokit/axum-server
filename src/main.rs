@@ -6,6 +6,7 @@ use axum::Router;
 use axum::routing::get;
 use serde::Serialize;
 use tower_http::services::ServeDir;
+use tower_http::services::ServeFile;
 
 #[derive(Serialize)]
 struct CustomMessage {
@@ -22,7 +23,9 @@ async fn test() -> Json<CustomMessage> {
 #[tokio::main]
 async fn main() -> Result<(), Box<dyn Error>> {
     let app = Router::new()
-        .fallback_service(ServeDir::new("./site"))
+        .fallback_service(
+            ServeDir::new("./site").not_found_service(ServeFile::new("./site/index.html")),
+        )
         .route("/api/test", get(test).post(test));
 
     let addr = SocketAddr::from(([127, 0, 0, 1], 8080));
